@@ -1,3 +1,11 @@
+/*
+ * @Description: app api 处理入口
+ * @Author: Looper
+ * @Date: 2020-05-31 21:14:03
+ * @LastEditors: Looper
+ * @LastEditTime: 2020-06-01 22:47:55
+ * @FilePath: /nodejs/blog-1/app.js
+ */
 const querystring = require("querystring");
 const handleBlogRouter = require("./src/router/blog");
 const handleUserRouter = require("./src/router/user");
@@ -42,9 +50,11 @@ const serverHandle = (req, res) => {
     req.body = postData;
 
     // 处理blog路由
-    const blogData = handleBlogRouter(req, res);
-    if (blogData) {
-      res.end(JSON.stringify(blogData));
+    const blogResult = handleBlogRouter(req, res);
+    if (blogResult) {
+      blogResult.then(blogData => {
+        res.end(JSON.stringify(blogData));
+      })
       return;
     }
 
@@ -55,7 +65,7 @@ const serverHandle = (req, res) => {
       return;
     }
 
-    res.writeHead(404, {"Content-type": "text/plain"})
+    res.writeHead(404, { "Content-type": "text/plain" })
     res.write("404 NOT FOUND!")
     res.end();
   })

@@ -1,3 +1,11 @@
+/*
+ * @Description: 博客路由
+ * @Author: Looper
+ * @Date: 2020-05-31 21:14:03
+ * @LastEditors: Looper
+ * @LastEditTime: 2020-06-01 23:01:24
+ * @FilePath: /nodejs/blog-1/src/router/blog.js
+ */
 const {
   getList,
   getDetail,
@@ -5,7 +13,7 @@ const {
   updateBlog,
   deleteBlog
 } = require("../controller/blog");
-const {SuccessModel, ErrorModel} = require("../model/resModel");
+const { SuccessModel, ErrorModel } = require("../model/resModel");
 
 const handleBlogRouter = (req, res) => {
   const method = req.method;
@@ -16,8 +24,10 @@ const handleBlogRouter = (req, res) => {
   if (method === "GET" && path === "/api/blog/list") {
     const author = req.query.author || "";
     const keyword = req.query.keyword || "";
-    const listData = getList(author, keyword);
-    return new SuccessModel(listData);
+    const result = getList(author, keyword);
+    return result.then(listData => {
+      return new SuccessModel(listData);
+    });
   }
 
   // 博客详情
