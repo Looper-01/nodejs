@@ -45,6 +45,7 @@ const updateBlog = (id, blogData) => {
   console.log("update blog", id, blogData)
   return true;
 }
+
 const deleteBlog = (id) => {
   return true
 }
