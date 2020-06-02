@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-01 23:01:24
+ * @LastEditTime: 2020-06-02 12:51:28
  * @FilePath: /nodejs/blog-1/src/router/blog.js
  */
 const {
@@ -32,14 +32,20 @@ const handleBlogRouter = (req, res) => {
 
   // 博客详情
   if (method === "GET" && path === "/api/blog/detail") {
-    const data = getDetail(id);
-    return new SuccessModel(data);
+    const result = getDetail(id);
+    return result.then(data => {
+      return new SuccessModel(data);
+    })
   }
 
   // 新建博客
   if (method === "POST" && path === "/api/blog/new") {
-    const data = newBlog(req.body);
-    return new SuccessModel(data);
+    // mock,待开发登录时再改成真实数据
+    req.body.author = "zhangsan";
+    const result = newBlog(req.body);
+    return result.then(data => {
+      return new SuccessModel(data);
+    })
   }
 
   // 更新博客

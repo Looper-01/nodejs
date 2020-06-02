@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-06-01 22:20:47
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-01 22:55:14
+ * @LastEditTime: 2020-06-02 12:44:15
  * @FilePath: /nodejs/blog-1/src/controller/blog.js
  */
 
@@ -21,20 +21,26 @@ const getList = (author, keyword) => {
 }
 
 const getDetail = (id) => {
-  return {
-    id: 1,
-    title: "标题A",
-    content: "内容A",
-    createTime: "2020-05-30",
-    author: "zhangsan"
-  }
+  const sql = `select * from blogs where id = '${id}'`
+  return exec(sql).then(rows => {
+    return rows[0];
+  })
 }
 
 const newBlog = (blogData = {}) => {
-  console.log("new blog data", blogData)
-  return {
-    id: 3
-  }
+  const title = blogData.title;
+  const content = blogData.content;
+  const author = blogData.author;
+  const createTime = Date.now();
+
+  const sql = ` insert into blogs(title,content,createtime,author)
+    values ('${title}','${content}','${createTime}','${author}') `;
+  return exec(sql).then(insertData => {
+    console.log('insertData is ', insertData);
+    return {
+      id: insertData.insertId
+    }
+  })
 }
 
 const updateBlog = (id, blogData) => {
