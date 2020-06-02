@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-06-01 22:20:47
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-02 12:44:15
+ * @LastEditTime: 2020-06-02 13:00:45
  * @FilePath: /nodejs/blog-1/src/controller/blog.js
  */
 
@@ -44,8 +44,17 @@ const newBlog = (blogData = {}) => {
 }
 
 const updateBlog = (id, blogData) => {
-  console.log("update blog", id, blogData)
-  return true;
+  const title = blogData.title;
+  const content = blogData.content;
+  const sql = `update blogs set title = '${title}',content = '${content}' where id = '${id}'`
+
+  return exec(sql).then(updateData => {
+    console.log('updateData is ', updateData);
+    if (updateData.affectedRows > 0) {
+      return true
+    }
+    return false;
+  })
 }
 
 const deleteBlog = (id) => {

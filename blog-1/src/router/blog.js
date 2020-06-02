@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-02 12:51:28
+ * @LastEditTime: 2020-06-02 13:01:44
  * @FilePath: /nodejs/blog-1/src/router/blog.js
  */
 const {
@@ -51,10 +51,12 @@ const handleBlogRouter = (req, res) => {
   // 更新博客
   if (method === "POST" && path === "/api/blog/update") {
     const result = updateBlog(id, req.body);
-    if (result) {
-      return new SuccessModel("更新博客成功");
-    }
-    return new ErrorModel("更新博客失败")
+    return result.then(val => {
+      if (val) {
+        return new SuccessModel("更新博客成功");
+      }
+      return new ErrorModel("更新博客失败")
+    })
   }
 
   // 删除博客
