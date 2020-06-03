@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-01 22:47:55
+ * @LastEditTime: 2020-06-03 23:49:55
  * @FilePath: /nodejs/blog-1/app.js
  */
 const querystring = require("querystring");
@@ -59,9 +59,11 @@ const serverHandle = (req, res) => {
     }
 
     // 处理user路由
-    const userData = handleUserRouter(req, res);
-    if (userData) {
-      res.end(JSON.stringify(userData));
+    const userResult = handleUserRouter(req, res);
+    if (userResult) {
+      userResult.then(userData => {
+        res.end(JSON.stringify(userData));
+      })
       return;
     }
 

@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-06-01 22:20:47
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-03 23:34:40
+ * @LastEditTime: 2020-06-03 23:42:41
  * @FilePath: /nodejs/blog-1/src/controller/blog.js
  */
 
@@ -59,7 +59,7 @@ const updateBlog = (id, blogData) => {
 
 const delBlog = (id, author) => {
   // 这里面先不使用软删除
-  const sql = `delete from blogs where id = '${id}' and author = '${author}'`;
+  const sql = `delete from blogs where id = '${id}' and author = '${author}';`;
   return exec(sql).then(deleteData => {
     if (deleteData.affectedRows > 0) {
       return true;
