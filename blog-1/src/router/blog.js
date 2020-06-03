@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-02 13:01:44
+ * @LastEditTime: 2020-06-03 23:39:03
  * @FilePath: /nodejs/blog-1/src/router/blog.js
  */
 const {
@@ -11,7 +11,7 @@ const {
   getDetail,
   newBlog,
   updateBlog,
-  deleteBlog
+  delBlog
 } = require("../controller/blog");
 const { SuccessModel, ErrorModel } = require("../model/resModel");
 
@@ -61,11 +61,14 @@ const handleBlogRouter = (req, res) => {
 
   // 删除博客
   if (method === "POST" && path === "/api/blog/delete") {
-    const result = deleteBlog(id);
-    if (result) {
-      return new SuccessModel("删除博客成功")
-    }
-    return new ErrorModel("删除博客失败")
+    const author = "zhangsan"; // 模拟数据
+    const result = delBlog(id, author);
+    return result.then(val => {
+      if (val) {
+        return new SuccessModel("删除博客成功")
+      }
+      return new ErrorModel("删除博客失败")
+    })
   }
 }
 
