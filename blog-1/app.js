@@ -3,13 +3,12 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-03 23:49:55
- * @FilePath: /nodejs/blog-1/app.js
+ * @LastEditTime: 2020-06-04 22:58:47
+ * @FilePath: \nodejs\blog-1\app.js
  */
 const querystring = require("querystring");
 const handleBlogRouter = require("./src/router/blog");
 const handleUserRouter = require("./src/router/user");
-
 
 const getPostData = (req) => {
   return new Promise((resolve, reject) => {
@@ -33,17 +32,30 @@ const getPostData = (req) => {
         return;
       }
       resolve(JSON.parse(postData));
-    })
+    });
   });
-}
+};
 
 const serverHandle = (req, res) => {
   res.setHeader("Content-Type", "application/json");
+  // 获取path
   const url = req.url;
   req.path = url.split("?")[0];
 
   // 解析query
-  req.query = querystring.parse(url.split("?")[1])
+  req.query = querystring.parse(url.split("?")[1]);
+
+  // 解析cookie
+  const cookieStr = req.headers.cookie || "";
+  cookieStr.split(";").forEach((item) => {
+    if (!item) {
+      return;
+    }
+    const arr = item.split("=");
+    const key = arr[0];
+    const val = arr[1];
+    req.cookie[key] = val;
+  });
 
   // 处理post data
   getPostData(req).then((postData) => {
@@ -52,26 +64,25 @@ const serverHandle = (req, res) => {
     // 处理blog路由
     const blogResult = handleBlogRouter(req, res);
     if (blogResult) {
-      blogResult.then(blogData => {
+      blogResult.then((blogData) => {
         res.end(JSON.stringify(blogData));
-      })
+      });
       return;
     }
 
     // 处理user路由
     const userResult = handleUserRouter(req, res);
     if (userResult) {
-      userResult.then(userData => {
+      userResult.then((userData) => {
         res.end(JSON.stringify(userData));
-      })
+      });
       return;
     }
 
-    res.writeHead(404, { "Content-type": "text/plain" })
-    res.write("404 NOT FOUND!")
+    res.writeHead(404, { "Content-type": "text/plain" });
+    res.write("404 NOT FOUND!");
     res.end();
-  })
-
-}
+  });
+};
 
 module.exports = serverHandle;
