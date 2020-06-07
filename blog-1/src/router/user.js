@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-07 11:49:19
+ * @LastEditTime: 2020-06-07 14:32:21
  * @FilePath: /nodejs/blog-1/src/router/user.js
  * @Url: 
  */
@@ -26,7 +26,7 @@ const handleUserRouter = (req, res) => {
         return new SuccessModel("登录成功");
       }
       return new ErrorModel("登录失败");
-    })
+    });
   }
 
   if (method === "GET" && req.path === "/api/user/login-test") {

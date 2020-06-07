@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-07 11:39:24
+ * @LastEditTime: 2020-06-07 14:33:00
  * @FilePath: /nodejs/blog-1/app.js
  */
 const querystring = require("querystring");
@@ -43,17 +43,18 @@ const getPostData = (req) => {
         return;
       }
       resolve(JSON.parse(postData));
-    })
+    });
   });
-}
+};
 
 const serverHandle = (req, res) => {
   res.setHeader("Content-Type", "application/json");
+  // 获取path
   const url = req.url;
   req.path = url.split("?")[0];
 
   // 解析query
-  req.query = querystring.parse(url.split("?")[1])
+  req.query = querystring.parse(url.split("?")[1]);
 
   // 解析cookie
   req.cookie = {};
@@ -94,7 +95,7 @@ const serverHandle = (req, res) => {
           res.setHeader("Set-Cookie", `userid=${userId};path=/; httpOnly;expires=${getCookieExpires()}`)
         }
         res.end(JSON.stringify(blogData));
-      })
+      });
       return;
     }
 
@@ -106,15 +107,14 @@ const serverHandle = (req, res) => {
           res.setHeader("Set-Cookie", `userid=${userId};path=/; httpOnly;expires=${getCookieExpires()}`)
         }
         res.end(JSON.stringify(userData));
-      })
+      });
       return;
     }
 
-    res.writeHead(404, { "Content-type": "text/plain" })
-    res.write("404 NOT FOUND!")
+    res.writeHead(404, { "Content-type": "text/plain" });
+    res.write("404 NOT FOUND!");
     res.end();
-  })
-
-}
+  });
+};
 
 module.exports = serverHandle;
