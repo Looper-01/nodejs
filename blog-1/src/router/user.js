@@ -3,12 +3,13 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-07 14:32:21
+ * @LastEditTime: 2020-06-07 18:14:47
  * @FilePath: /nodejs/blog-1/src/router/user.js
  * @Url: 
  */
-const { login } = require("../controller/user")
-const { SuccessModel, ErrorModel } = require("../model/resModel")
+const { login } = require("../controller/user");
+const { SuccessModel, ErrorModel } = require("../model/resModel");
+const { set } = require("../db/redis");
 
 const handleUserRouter = (req, res) => {
   const method = req.method;
@@ -19,10 +20,12 @@ const handleUserRouter = (req, res) => {
     const result = login(username, password);
     return result.then(data => {
       if (data.username) {
+        // 设置session
         req.session.username = data.username;
         req.session.realName = data.realname;
 
-        console.log("req.session is ", req.session);
+        // 同步到redis
+        set(req.sessionId, req.session);
         return new SuccessModel("登录成功");
       }
       return new ErrorModel("登录失败");

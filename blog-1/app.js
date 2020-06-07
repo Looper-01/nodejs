@@ -3,10 +3,11 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-07 14:33:00
+ * @LastEditTime: 2020-06-07 18:29:29
  * @FilePath: /nodejs/blog-1/app.js
  */
 const querystring = require("querystring");
+const { get, set } = require("./src/db/redis");
 const handleBlogRouter = require("./src/router/blog");
 const handleUserRouter = require("./src/router/user");
 
@@ -69,22 +70,31 @@ const serverHandle = (req, res) => {
     req.cookie[key] = val;
   });
 
-  // 解析session
+  // 解析session使用redis
   let needSetCookie = false;
   let userId = req.cookie.userid;
-  if (userId) {
-    if (!SESSION_DATA[userId]) {
-      SESSION_DATA[userId] = {}
-    }
-  } else {
+  if (!userId) {
     needSetCookie = true;
-    userId = `${Date.now()}_${Math.random()}`
-    SESSION_DATA[userId] = {}
+    userId = `${Date.now()}_${Math.random()}`;
+    // 初始化session
+    set(userId, {});
   }
-  req.session = SESSION_DATA[userId];
-
-  // 处理post data
-  getPostData(req).then((postData) => {
+  // 获取session
+  req.sessionId = userId;
+  get(req.sessionId).then(sessionData => {
+    if (sessionData == null) {
+      // 初始化redis中的session
+      set(req.sessionId, {});
+      // 设置session
+      req.session = {}
+    } else {
+      // 设置session
+      req.session = sessionData;
+    }
+    console.log("req.session", req.session);
+    // 处理post data
+    return getPostData(req);
+  }).then((postData) => {
     req.body = postData;
 
     // 处理blog路由
