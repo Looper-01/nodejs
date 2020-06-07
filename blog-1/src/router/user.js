@@ -3,7 +3,7 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-07 18:14:47
+ * @LastEditTime: 2020-06-07 18:39:19
  * @FilePath: /nodejs/blog-1/src/router/user.js
  * @Url: 
  */
@@ -15,8 +15,8 @@ const handleUserRouter = (req, res) => {
   const method = req.method;
   const path = req.path;
 
-  if (method === "GET" && path === "/api/user/login") {
-    const { username, password } = req.query;
+  if (method === "POST" && path === "/api/user/login") {
+    const { username, password } = req.body;
     const result = login(username, password);
     return result.then(data => {
       if (data.username) {
@@ -32,16 +32,16 @@ const handleUserRouter = (req, res) => {
     });
   }
 
-  if (method === "GET" && req.path === "/api/user/login-test") {
-    if (req.session.username) {
-      return Promise.resolve(
-        new SuccessModel({
-          session: req.session
-        })
-      )
-    }
-    return Promise.resolve(new ErrorModel("尚未登录！"));
-  }
+  // if (method === "GET" && req.path === "/api/user/login-test") {
+  //   if (req.session.username) {
+  //     return Promise.resolve(
+  //       new SuccessModel({
+  //         session: req.session
+  //       })
+  //     )
+  //   }
+  //   return Promise.resolve(new ErrorModel("尚未登录！"));
+  // }
 }
 
 module.exports = handleUserRouter;
