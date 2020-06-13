@@ -3,11 +3,12 @@
  * @Author: Looper
  * @Date: 2020-05-31 21:14:03
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-07 18:29:29
+ * @LastEditTime: 2020-06-13 22:06:41
  * @FilePath: /nodejs/blog-1/app.js
  */
 const querystring = require("querystring");
 const { get, set } = require("./src/db/redis");
+const { access, error, event } = require("./src/utils/log")
 const handleBlogRouter = require("./src/router/blog");
 const handleUserRouter = require("./src/router/user");
 
@@ -49,6 +50,9 @@ const getPostData = (req) => {
 };
 
 const serverHandle = (req, res) => {
+  // 记录access log
+  access(`${req.method} -- ${req.url} -- ${req.headers["user-agent"]} -- ${Date.now()}`);
+
   res.setHeader("Content-Type", "application/json");
   // 获取path
   const url = req.url;
