@@ -3,10 +3,11 @@
  * @Author: Looper
  * @Date: 2020-06-01 22:20:47
  * @LastEditors: Looper
- * @LastEditTime: 2020-06-03 23:42:41
+ * @LastEditTime: 2020-06-14 22:32:18
  * @FilePath: /nodejs/blog-1/src/controller/blog.js
  */
 
+const xss = require("xss");
 const { exec } = require('../db/mysql');
 const getList = (author, keyword) => {
   let sql = `select * from blogs where 1=1 `
@@ -28,7 +29,8 @@ const getDetail = (id) => {
 }
 
 const newBlog = (blogData = {}) => {
-  const title = blogData.title;
+  const title = xss(blogData.title);
+  console.log("title is ", title);
   const content = blogData.content;
   const author = blogData.author;
   const createTime = Date.now();
